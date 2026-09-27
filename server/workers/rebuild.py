@@ -107,9 +107,7 @@ def process_job(conn, job_id: int, llm: LLMProvider, embedder: Embedder) -> str:
 
     # Phase 2: run the recipe outside any transaction.
     gen = generate(conn, recipe, [latest["text"] for _, latest, _ in live], llm, embedder)
-    decision = None if gen.violated else cutoff.decide(
-        cur["text"], gen.text, cur["embedding"], gen.embedding, llm
-    )
+    decision = None if gen.violated else cutoff.decide(cur["text"], gen.text, embedder, llm)
 
     with conn.transaction():
         head = q.get_head(conn, rid, lock=True)

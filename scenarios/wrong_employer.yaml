@@ -1,0 +1,26 @@
+name: wrong_employer
+description: >
+  The agent stored "I work at Globex." from a transcript where Dana was
+  talking about a vendor. Retracting it must fix the employer belief, the
+  profile, and the renewal plan, stop the unaffected work beliefs by early
+  cutoff, and flag the past tool call that used the wrong employer.
+seed: demo
+steps:
+  - check:
+      text_equals: {employer: "User works at Globex."}
+      contains: {profile: "Globex", renewal_outreach: "Globex"}
+  - tool_call: {demo: draft_reply, question: "Can we add seats before renewal?"}
+  - retract: m_globex
+    expect: {stale_count: 14}
+  - wait: {}
+    expect:
+      jobs: {done: 7, cut_off: 5, skipped: 2}
+  - check:
+      text_equals:
+        employer: "User works at Initech."
+        role: "User is a data engineer."
+        renewal_outreach: "Before the September renewal, contact Priya at Initech about 12 seats."
+      not_contains: {profile: "Globex", agent_brief: "Globex", summary_work: "Globex"}
+      version: {profile: 2, role: 2, manager: 2, contact_plan: 1}
+      status: {m_globex: retracted, profile: valid}
+      exposure_stale_tools: [draft_reply]

@@ -2,14 +2,14 @@ import pytest
 
 from rederive import Recipe, RecipeRegistry, recipe_hash
 from server.cutoff import decide
-from server.embed import HashingEmbedder
+from server.embed import HashingEmbedder, cosine
 from server.llm import FakeProvider, sensitive_spans
 
 emb = HashingEmbedder()
 
 
 def _decide(a, b, **kw):
-    return decide(a, b, emb.embed(a), emb.embed(b), FakeProvider(), **kw)
+    return decide(a, b, emb, FakeProvider(), **kw)
 
 
 def test_cutoff_exact_and_reorder():
@@ -21,16 +21,20 @@ def test_cutoff_exact_and_reorder():
 
 def test_cutoff_band_goes_to_judge():
     d = _decide("User works at Globex. User is on Central time.",
-                "User works at Initech. User is on Central time.", equal_at=0.97, different_below=0.5)
+                "User works at Initech. User is on Central time.", equal_at=0.97, different_below=0.1)
     assert d.method == "judge" and not d.equal
 
 
-def test_cutoff_guard_catches_dropped_fact_in_long_summary():
-    old = " ".join(f"Fact number {i}." for i in range(16))
-    new = " ".join(f"Fact number {i}." for i in range(16) if i != 7)
-    d = _decide(old, new)
-    assert d.similarity > 0.97  # cosine alone would call this equal
-    assert d.method == "judge" and not d.equal
+def test_claim_similarity_catches_small_edits_in_long_text():
+    facts = [f"User fact number {i} is about topic {i}." for i in range(10)]
+    old = " ".join(facts)
+    swapped = old.replace("topic 4", "topic 44")
+    dropped = " ".join(f for i, f in enumerate(facts) if i != 7)
+    whole_text = cosine(emb.embed(old), emb.embed(swapped))
+    assert whole_text > 0.97  # document cosine would call this equal
+    for new in (swapped, dropped):
+        d = _decide(old, new)
+        assert d.similarity < 0.97 and not d.equal
 
 
 def test_cutoff_low_similarity_is_different():

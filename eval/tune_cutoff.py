@@ -40,11 +40,11 @@ class CachedJudge:
         return self.cache[(old, new)]
 
 
-def evaluate(pairs, vecs, judge, equal_at, different_below):
+def evaluate(pairs, emb, judge, equal_at, different_below):
     fe = fd = calls = 0
-    for p, (a, b) in zip(pairs, vecs):
+    for p in pairs:
         before = judge.calls
-        d = decide(p["old"], p["new"], a, b, judge, equal_at, different_below)
+        d = decide(p["old"], p["new"], emb, judge, equal_at, different_below)
         calls += judge.calls - before
         fe += (not p["equal"]) and d.equal
         fd += p["equal"] and not d.equal
@@ -61,14 +61,13 @@ def main() -> None:
 
     pairs = [json.loads(line) for line in PAIRS.read_text().splitlines() if line.strip()]
     emb = get_embedder()
-    vecs = [(emb.embed(p["old"]), emb.embed(p["new"])) for p in pairs]
     judge = CachedJudge(get_llm())
 
     grid = []
     for equal_at in (0.90, 0.93, 0.95, 0.97, 0.98, 0.99, 1.01):
         for different_below in (0.5, 0.6, 0.7, 0.75, 0.8, 0.85):
             if different_below < equal_at:
-                grid.append(evaluate(pairs, vecs, judge, equal_at, different_below))
+                grid.append(evaluate(pairs, emb, judge, equal_at, different_below))
     grid.sort(key=lambda r: (r["false_equal"], r["false_different"], r["judge_calls"]))
 
     print(f"{len(pairs)} pairs ({sum(p['equal'] for p in pairs)} equal)")
@@ -76,7 +75,7 @@ def main() -> None:
     for r in grid[: args.show]:
         print(f"{r['equal_at']:>9.2f} {r['different_below']:>10.2f} {r['false_equal']:>9.1%} "
               f"{r['false_different']:>10.1%} {r['judge_calls']:>6}")
-    default = evaluate(pairs, vecs, judge, 0.97, 0.85)
+    default = evaluate(pairs, emb, judge, 0.97, 0.85)
     print(f"\ndefault 0.97/0.85: false-equal {default['false_equal']:.1%}, "
           f"false-different {default['false_different']:.1%}, judge calls {default['judge_calls']}")
     best = grid[0]
