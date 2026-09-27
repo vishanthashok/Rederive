@@ -32,3 +32,6 @@ include = ["rederive*", "server*"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["sdk", "."]
+
+[tool.setuptools.package-data]
+server = ["db/schema.sql"]

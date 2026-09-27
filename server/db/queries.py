@@ -30,16 +30,23 @@ GROUP BY id, version
 ORDER BY depth, id
 """
 
-# Every edge above a record version, with its distance from the start.
+# Every edge above a record version, with its distance from the start. Only
+# the newest edge per (child version, parent) counts, so a child that was
+# skipped by early cutoff shows its alias edge, not the superseded one.
 LINEAGE_SQL = """
-WITH RECURSIVE anc(child_id, child_version, parent_id, parent_version, alias, depth) AS (
+WITH RECURSIVE eff AS (
+    SELECT DISTINCT ON (child_id, child_version, parent_id)
+           child_id, child_version, parent_id, parent_version, alias
+    FROM edge
+    ORDER BY child_id, child_version, parent_id, parent_version DESC
+), anc(child_id, child_version, parent_id, parent_version, alias, depth) AS (
     SELECT e.child_id, e.child_version, e.parent_id, e.parent_version, e.alias, 1
-    FROM edge e
+    FROM eff e
     WHERE e.child_id = %(id)s AND e.child_version = %(version)s
   UNION
     SELECT e.child_id, e.child_version, e.parent_id, e.parent_version, e.alias, a.depth + 1
     FROM anc a
-    JOIN edge e ON e.child_id = a.parent_id AND e.child_version = a.parent_version
+    JOIN eff e ON e.child_id = a.parent_id AND e.child_version = a.parent_version
     WHERE a.depth < %(max_depth)s
 )
 SELECT child_id, child_version, parent_id, parent_version, alias, min(depth) AS depth

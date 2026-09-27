@@ -46,6 +46,8 @@ def test_rebuild_with_early_cutoff(api, run_jobs):
     lin = api.lineage(g["profile"]["id"])
     alias = [e for e in lin["edges"] if e["alias"]]
     assert [(e["parent_id"], e["parent_version"]) for e in alias] == [(g["employer"]["id"], 2)]
+    parents = {(e["parent_id"], e["parent_version"]) for e in lin["edges"] if e["depth"] == 1}
+    assert parents == {(g["employer"]["id"], 2), (g["tz"]["id"], 1)}
 
 
 def test_correct_rebuilds_with_new_text(api, run_jobs):
