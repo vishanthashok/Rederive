@@ -1,0 +1,4 @@
+ui/node_modules
+ui/.next
+**/__pycache__
+.git

@@ -1,0 +1,28 @@
+name: fanout_summary
+description: >
+  A summary over 64 messages is built as a tree with 4 inputs per node.
+  Retracting one message rebuilds one node per level, 3 nodes, instead of
+  one call over all 64 inputs.
+seed:
+  observations:
+    count: 64
+    key: fact_{i}
+    text: "Ticket {i} was resolved on day {i}."
+steps:
+  - derive: {key: digest, inputs: "fact_*", recipe: summary, kind: summary, fan_in_k: 4}
+  - check:
+      contains: {digest: "Ticket 63 was resolved on day 63."}
+      meta: {digest: {fan_in: {k: 4, leaves: 64, levels: 3}}}
+  - retract: fact_17
+    expect: {stale_count: 3}
+  - wait: {}
+    expect:
+      jobs: {done: 3}
+  - check:
+      not_contains: {digest: "Ticket 17 was"}
+      contains: {digest: "Ticket 18 was resolved on day 18."}
+      version: {digest: 2}
+recipes:
+  summary:
+    template: "Summarize the resolved tickets. One sentence per ticket.\n{inputs}"
+    params: {fake: {op: summarize}}

@@ -1,0 +1,55 @@
+# docker compose up --build
+# UI: http://localhost:3000   API: http://localhost:8000/docs
+# Set REDERIVE_LLM=anthropic and ANTHROPIC_API_KEY in your shell to use Claude.
+x-app-env: &app-env
+  DATABASE_URL: postgresql://rederive:rederive@postgres:5432/rederive
+  REDIS_URL: redis://redis:6379/0
+  REDERIVE_LLM: ${REDERIVE_LLM:-fake}
+  REDERIVE_EMBEDDER: ${REDERIVE_EMBEDDER:-hashing}
+  REDERIVE_ALLOW_RESET: ${REDERIVE_ALLOW_RESET:-1}
+  ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: rederive
+      POSTGRES_PASSWORD: rederive
+      POSTGRES_DB: rederive
+    ports: ["5432:5432"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rederive"]
+      interval: 2s
+      retries: 30
+    volumes: [pgdata:/var/lib/postgresql/data]
+
+  redis:
+    image: redis:7
+    ports: ["6379:6379"]
+
+  server:
+    build: .
+    environment: *app-env
+    ports: ["8000:8000"]
+    depends_on:
+      postgres: {condition: service_healthy}
+      redis: {condition: service_started}
+
+  worker:
+    build: .
+    command: ["python", "-m", "server.workers.rebuild"]
+    environment: *app-env
+    deploy: {replicas: 2}
+    depends_on:
+      postgres: {condition: service_healthy}
+      redis: {condition: service_started}
+
+  ui:
+    build:
+      context: ./ui
+      args: {NEXT_PUBLIC_API_URL: "http://localhost:8000"}
+    ports: ["3000:3000"]
+    depends_on: [server]
+
+volumes:
+  pgdata:

@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+.venv/
+.env
+ui/node_modules/
+ui/.next/
+ui/next-env.d.ts
+dump.rdb

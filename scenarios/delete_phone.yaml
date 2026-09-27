@@ -1,0 +1,34 @@
+name: delete_phone
+description: >
+  Dana asks support to forget her phone number. Deleting the message adds a
+  must_not_contain constraint, retracts it, and rebuilds every descendant.
+  A later message repeats the number in another format, so the first rebuild
+  of the contact summary leaks it. The verifier catches the leak with the
+  normalized check and the exclusion retry removes it.
+seed: demo
+steps:
+  - observe: {key: m_phone_again, text: "Text me at (512) 555 0199 after 5pm.", topic: contact}
+  - derive: {key: contact_extra, inputs: [summary_contact, m_phone_again], recipe: summary, kind: summary}
+  - tool_call: {demo: lookup_profile}
+  - delete: m_phone
+    expect: {stale_count_min: 4}
+  - wait: {}
+    expect:
+      jobs_none: [failed]
+  - check:
+      unreadable: [m_phone]
+      text_equals: {phone: "User's phone is unknown."}
+      not_contains_normalized:
+        summary_contact: "5125550199"
+        contact_extra: "5125550199"
+        contact_plan: "5125550199"
+        agent_brief: "5125550199"
+      deletion_report:
+        source: m_phone
+        caught_on_first_attempt: [contact_extra]
+        residual: [m_phone_again]
+      exposure_clean: true
+recipes:
+  summary:
+    template: "Summarize the facts in these inputs. One sentence per fact.\n{inputs}"
+    params: {fake: {op: summarize}}
