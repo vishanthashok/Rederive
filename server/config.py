@@ -39,6 +39,8 @@ class Settings:
         default_factory=lambda: _float("REDERIVE_CUTOFF_DIFFERENT", 0.85)
     )
     fan_in_k: int = field(default_factory=lambda: int(os.environ.get("REDERIVE_FAN_IN_K", 8)))
+    # Seconds a worker pauses after marking a record rebuilding. Demo only.
+    rebuild_delay: float = field(default_factory=lambda: _float("REDERIVE_REBUILD_DELAY", 0.0))
     allow_reset: bool = field(
         default_factory=lambda: os.environ.get("REDERIVE_ALLOW_RESET", "0") == "1"
     )

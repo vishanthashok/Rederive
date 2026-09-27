@@ -76,7 +76,11 @@ def process_job(conn, job_id: int, llm: LLMProvider, embedder: Embedder) -> str:
         emit(conn, "rebuilding", record_id=rid, version=cur["version"], job_id=job_id)
         recipe = q.get_recipe(conn, cur["recipe_hash"])
 
-    live = [p for p in plan if p[1]["status"] == "valid" and not p[1]["deleted"]]
+    if settings.rebuild_delay:
+        # Demo only: hold the rebuilding state long enough to see it in the UI.
+        time.sleep(settings.rebuild_delay)
+
+    live =[p for p in plan if p[1]["status"] == "valid" and not p[1]["deleted"]]
     dropped = [str(used["id"]) for used, latest, _ in plan if latest["status"] != "valid" or latest["deleted"]]
     unchanged = len(live) == len(plan) and all(
         used["content_version"] == latest["content_version"] for used, latest, _ in live

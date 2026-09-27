@@ -35,6 +35,8 @@ exposure report (tool calls that read now-invalid versions):
 
 Of the 14 stale records, 7 were rebuilt with new content. 5 were rebuilt and judged equivalent, so they stopped the cascade (the role, manager, timezone, hours, and seats beliefs all come from the work summary but don't mention the employer). 2 never ran a recipe because every input was unchanged in content.
 
+Watch the 2-minute walkthrough: [docs/demo.webm](docs/demo.webm). It seeds the graph, shows the profile, runs a tool call, retracts the wrong message in the UI, follows the rebuild cascade, and ends on the diff and the exposure report.
+
 | Profile diff | Exposure report |
 |---|---|
 | ![Diff](docs/ui-3-profile-diff.png) | ![Exposure](docs/ui-4-exposure.png) |
@@ -70,6 +72,16 @@ export REDERIVE_LLM=anthropic ANTHROPIC_API_KEY=...
 ```
 
 Recipes then run on `claude-sonnet-5` at low effort. Equivalence and paraphrase checks run on `claude-haiku-4-5` at temperature 0. Sonnet 5 rejects sampling parameters, so low effort is how recipe output stays short and stable.
+
+### Re-recording the video
+
+```
+REDERIVE_REBUILD_DELAY=0.6 make worker   # one worker, slowed so each state shows on screen
+make server                              # and make ui, in other terminals
+make record                              # writes docs/demo.webm
+```
+
+`REDERIVE_REBUILD_DELAY` makes a worker pause after it marks a record `rebuilding`. It defaults to 0 and exists only for demos. The script uses Playwright. Set `CHROMIUM_PATH` to use a specific browser binary.
 
 ## Architecture
 

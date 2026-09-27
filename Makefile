@@ -1,6 +1,6 @@
 export PYTHONPATH := sdk:.
 
-.PHONY: install test server worker ui demo scenarios tune up
+.PHONY: install test server worker ui demo scenarios tune up record
 
 install:
 	pip install -e ".[server,dev]"
@@ -29,3 +29,7 @@ tune:
 
 up:
 	docker compose up --build
+
+# Needs server, UI, and one worker started with REDERIVE_REBUILD_DELAY=0.6.
+record:
+	node demo/record_demo.mjs

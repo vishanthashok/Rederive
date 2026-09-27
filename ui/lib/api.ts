@@ -118,5 +118,7 @@ export function eventsUrl(): string {
 }
 
 export function label(n: GraphNode): string {
-  return (n.meta?.name as string | undefined) ?? `${n.kind} ${n.id.slice(0, 6)}`;
+  const name = (n.meta?.name as string | undefined) ?? `${n.kind} ${n.id.slice(0, 6)}`;
+  // Partial summaries in a fan-in tree share their parent's name.
+  return n.meta?.partial ? `${name} (part, level ${n.meta.level})` : name;
 }

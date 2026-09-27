@@ -13,6 +13,7 @@ import {
   type Node,
   type NodeProps,
   useNodesState,
+  useReactFlow,
 } from "@xyflow/react";
 import { memo, useEffect, useMemo } from "react";
 import { label, type Graph, type GraphNode } from "@/lib/api";
@@ -55,6 +56,19 @@ function layout(graph: Graph): Map<string, { x: number; y: number }> {
     out.set(n.id, { x: p.x - W / 2, y: p.y - H / 2 });
   });
   return out;
+}
+
+// Pan and zoom to the selected node and its direct inputs. At full-graph zoom
+// node text is too small to read.
+function FocusOnSelect({ selected, graph }: { selected: string | null; graph: Graph }) {
+  const flow = useReactFlow();
+  useEffect(() => {
+    if (!selected) return;
+    const ids = [selected, ...graph.edges.filter((e) => e.child_id === selected).map((e) => e.parent_id)];
+    flow.fitView({ nodes: ids.map((id) => ({ id })), duration: 600, padding: 0.4, maxZoom: 1.1 });
+    // Refocus only when the selection changes, not on every graph update.
+  }, [selected]); // eslint-disable-line react-hooks/exhaustive-deps
+  return null;
 }
 
 export default function GraphView({
@@ -112,6 +126,7 @@ export default function GraphView({
       minZoom={0.1}
       proOptions={{ hideAttribution: true }}
     >
+      <FocusOnSelect selected={selected} graph={graph} />
       <Background gap={24} />
       <Controls showInteractive={false} />
       <MiniMap
