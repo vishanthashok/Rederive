@@ -1,0 +1,50 @@
+{"old": "User works at Initech. User is on Central time.", "new": "User is on Central time. User works at Initech.", "equal": true, "note": "reorder"}
+{"old": "User prefers email.", "new": "User prefers email. ", "equal": true, "note": "trailing space"}
+{"old": "User prefers email.", "new": "user prefers email.", "equal": true, "note": "case"}
+{"old": "User works at Initech.", "new": "User works at Initech!", "equal": true, "note": "punctuation"}
+{"old": "The user lives in Austin. The user has a dog.", "new": "The user has a dog. The user lives in Austin.", "equal": true, "note": "reorder"}
+{"old": "Order 1142 shipped on May 3. Order 1150 is pending.", "new": "Order 1150 is pending. Order 1142 shipped on May 3.", "equal": true, "note": "reorder"}
+{"old": "User is on the Pro plan.", "new": "User is on the Pro plan.", "equal": true, "note": "identical"}
+{"old": "User reported a login bug on iOS. User reported slow sync.", "new": "User reported slow sync. User reported a login bug on iOS.", "equal": true, "note": "reorder"}
+{"old": "User prefers short replies. User dislikes phone calls.", "new": "User dislikes phone calls. User prefers short replies.", "equal": true, "note": "reorder"}
+{"old": "Name: Dana Lee. Plan: Pro. Employer: Initech.", "new": "Plan: Pro. Name: Dana Lee. Employer: Initech.", "equal": true, "note": "reorder fields"}
+{"old": "User works at Initech as a data engineer.", "new": "User works at Initech as a Data Engineer.", "equal": true, "note": "case"}
+{"old": "User's timezone is Central.", "new": "User's timezone is Central .", "equal": true, "note": "spacing"}
+{"old": "Refund issued for order 1142.", "new": "Refund issued for order 1142.", "equal": true, "note": "identical"}
+{"old": "User uses Android. User uses the web app.", "new": "User uses the web app. User uses Android.", "equal": true, "note": "reorder"}
+{"old": "User is allergic to nothing relevant.", "new": "User is allergic to nothing relevant.", "equal": true, "note": "identical"}
+{"old": "User prefers email over chat.", "new": "User prefers email to chat.", "equal": true, "note": "light rewording"}
+{"old": "User started at Initech in March.", "new": "User joined Initech in March.", "equal": true, "note": "synonym"}
+{"old": "User has two open tickets.", "new": "User has 2 open tickets.", "equal": true, "note": "numeral"}
+{"old": "User asked to be called Dana.", "new": "User wants to be called Dana.", "equal": true, "note": "synonym"}
+{"old": "User is on Central time.", "new": "User is in the Central time zone.", "equal": true, "note": "paraphrase"}
+{"old": "Billing contact is the user.", "new": "The user is the billing contact.", "equal": true, "note": "paraphrase"}
+{"old": "User likes concise answers.", "new": "User prefers concise answers.", "equal": true, "note": "synonym"}
+{"old": "Order 1142 was delivered.", "new": "Order 1142 has been delivered.", "equal": true, "note": "tense"}
+{"old": "User uses dark mode.", "new": "User has dark mode enabled.", "equal": true, "note": "paraphrase"}
+{"old": "User reported the export bug twice.", "new": "User reported the export bug two times.", "equal": true, "note": "paraphrase"}
+{"old": "User works at Globex.", "new": "User works at Initech.", "equal": false, "note": "entity change"}
+{"old": "User works at Initech. User is on Central time.", "new": "User is on Central time.", "equal": false, "note": "dropped fact"}
+{"old": "User prefers email.", "new": "User prefers phone.", "equal": false, "note": "value change"}
+{"old": "Order 1142 shipped.", "new": "Order 1142 is pending.", "equal": false, "note": "status change"}
+{"old": "User is on the Pro plan.", "new": "User is on the Free plan.", "equal": false, "note": "plan change"}
+{"old": "User has a dog.", "new": "User does not have a dog.", "equal": false, "note": "negation"}
+{"old": "User lives in Austin.", "new": "User lives in Dallas.", "equal": false, "note": "city change"}
+{"old": "User's phone is 512-555-0199.", "new": "User's phone is unknown.", "equal": false, "note": "deletion"}
+{"old": "Refund issued for order 1142.", "new": "Refund issued for order 1150.", "equal": false, "note": "number change"}
+{"old": "User prefers email. User dislikes calls.", "new": "User prefers email.", "equal": false, "note": "dropped fact"}
+{"old": "User reported a login bug.", "new": "User reported a login bug. User reported slow sync.", "equal": false, "note": "added fact"}
+{"old": "Fact number 0. Fact number 1. Fact number 2. Fact number 3. Fact number 4. Fact number 5. Fact number 6. Fact number 7. Fact number 8. Fact number 9. Fact number 10. Fact number 11. Fact number 12. Fact number 13. Fact number 14. Fact number 15.", "new": "Fact number 0. Fact number 1. Fact number 2. Fact number 3. Fact number 4. Fact number 5. Fact number 6. Fact number 8. Fact number 9. Fact number 10. Fact number 11. Fact number 12. Fact number 13. Fact number 14. Fact number 15.", "equal": false, "note": "long summary, one fact dropped"}
+{"old": "Order 1100 shipped. Order 1101 shipped. Order 1102 shipped. Order 1103 shipped. Order 1104 shipped. Order 1105 shipped. Order 1106 shipped. Order 1107 shipped. Order 1108 shipped. Order 1109 shipped. Order 1110 shipped. Order 1111 shipped.", "new": "Order 1100 shipped. Order 1101 shipped. Order 1102 shipped. Order 1104 shipped. Order 1105 shipped. Order 1106 shipped. Order 1107 shipped. Order 1108 shipped. Order 1109 shipped. Order 1110 shipped. Order 1111 shipped.", "equal": false, "note": "long summary, one fact dropped"}
+{"old": "User works at Globex. User started at Initech in March. User is a data engineer.", "new": "User started at Initech in March. User is a data engineer.", "equal": false, "note": "wrong employer removed"}
+{"old": "User is on Central time.", "new": "User is on Eastern time.", "equal": false, "note": "timezone change"}
+{"old": "User has two open tickets.", "new": "User has three open tickets.", "equal": false, "note": "count change"}
+{"old": "User wants refunds by check.", "new": "User wants refunds by card.", "equal": false, "note": "method change"}
+{"old": "User is an admin.", "new": "User is not an admin.", "equal": false, "note": "negation"}
+{"old": "User prefers short replies.", "new": "User prefers detailed replies.", "equal": false, "note": "preference flip"}
+{"old": "Order 1142 was delivered on May 3.", "new": "Order 1142 was delivered on May 5.", "equal": false, "note": "date change"}
+{"old": "User uses Android.", "new": "User uses iOS.", "equal": false, "note": "platform change"}
+{"old": "User's manager is Sam.", "new": "User's manager is Priya.", "equal": false, "note": "person change"}
+{"old": "User can be contacted at dana@example.com.", "new": "User can be contacted by email.", "equal": false, "note": "email removed"}
+{"old": "User has a dog and a cat.", "new": "User has a dog.", "equal": false, "note": "dropped item"}
+{"old": "User is on the Pro plan and pays yearly.", "new": "User is on the Pro plan and pays monthly.", "equal": false, "note": "billing period"}
