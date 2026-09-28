@@ -83,6 +83,38 @@ make record                              # writes docs/demo.webm
 
 `REDERIVE_REBUILD_DELAY` makes a worker pause after it marks a record `rebuilding`. It defaults to 0 and exists only for demos. The script uses Playwright. Set `CHROMIUM_PATH` to use a specific browser binary.
 
+## Deploy to Railway
+
+The repo ships three Railway config files. One Railway project runs five services.
+
+| Service | Source | Config file path | Variables |
+|---|---|---|---|
+| Postgres | Railway database | | |
+| Redis | Railway database | | |
+| `server` | this repo, root `/` | `/railway.json` | `DATABASE_URL=${{Postgres.DATABASE_URL}}`<br>`REDIS_URL=${{Redis.REDIS_URL}}`<br>`REDERIVE_ALLOW_RESET=1` |
+| `worker` | this repo, root `/` | `/railway.worker.json` | same as `server` |
+| `ui` | this repo, root `/ui` | `/ui/railway.json` | `NEXT_PUBLIC_API_URL=https://${{server.RAILWAY_PUBLIC_DOMAIN}}` |
+
+Steps:
+
+1. Create a project at railway.com. Add Postgres and Redis with New, Database.
+2. Add the `server` service with New, GitHub Repo, and pick this repo. Rename it to `server`. Paste its variables into the Raw Editor. Under Settings, Networking, click Generate Domain.
+3. Add the repo again, rename it to `worker`, set Settings, Config-as-code, Railway Config File to `/railway.worker.json`, and paste the same variables. Give it no domain. Raise Settings, Deploy, Replicas to run more than one worker.
+4. Add the repo a third time, rename it to `ui`, set Settings, Source, Root Directory to `/ui` and the config file to `/ui/railway.json`. Add its variable and generate a domain.
+5. Deploy. Service names must match the table, because the variable references use them. The UI bakes the API URL in at build time, so redeploy `ui` if the server domain changes.
+
+Seed the demo data from your machine:
+
+```
+python -m demo_agent.support_agent --url https://<server-domain>
+```
+
+Then open the `ui` domain. To use Claude, add `REDERIVE_LLM=anthropic` and `ANTHROPIC_API_KEY` to both `server` and `worker`.
+
+`REDERIVE_ALLOW_RESET=1` lets the demo wipe the database through `/admin/reset`. Anyone with the server URL can call it. Remove it after seeding if the deployment is public.
+
+Railway sets `PORT`. The server image reads it and falls back to 8000. The Next.js standalone server reads it too.
+
 ## Architecture
 
 ```
@@ -131,6 +163,7 @@ server/verify.py     deletion verifier
 server/fanin.py      bounded fan-in summary trees
 server/llm.py        FakeProvider and AnthropicProvider
 ui/                  Next.js, React Flow graph, word diff, exposure report, live events
+railway*.json        Railway config for server, worker (ui/railway.json for the UI)
 scenarios/           wrong_employer, delete_phone, fanout_summary
 demo_agent/          40-message seed and the support agent
 eval/                run_scenarios.py, cutoff_pairs.jsonl (50 labeled pairs), tune_cutoff.py
