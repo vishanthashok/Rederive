@@ -24,6 +24,7 @@ def fact(name: str, question: str, pattern: str, template: str, default: str = "
         f"fact:{name}",
         Recipe(
             f"{question} Answer in one sentence of the form: {template.format(value='<value>')} "
+            f"If the inputs conflict, use the most recent statement. "
             f"If the inputs do not say, use {default!r}.\n{{inputs}}",
             params={"fake": {"op": "format", "template": template,
                              "fields": {"value": {"pattern": pattern, "default": default}}}},

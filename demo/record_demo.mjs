@@ -162,9 +162,14 @@ async function main() {
   await sleep(8000);
 
   // 6. The tally.
+  // A real LLM rebuilds slower than the fake provider. Wait for the queue to drain.
+  let s;
+  for (let i = 0; i < 240; i++) {
+    s = (await (await fetch(`${API}/jobs`)).json()).summary;
+    if (!s.queued && !s.running) break;
+    await sleep(500);
+  }
   await click(page.getByRole("button", { name: /Events/ }));
-  const jobs = await (await fetch(`${API}/jobs`)).json();
-  const s = jobs.summary;
   await caption(page, `${s.done ?? 0} rebuilt with new content, ${s.cut_off ?? 0} cut off as equivalent, ` +
     `${s.skipped ?? 0} skipped with no model call.`);
   await sleep(9000);

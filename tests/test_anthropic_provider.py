@@ -25,7 +25,7 @@ def test_recipe_call_uses_sonnet_without_sampling_params():
     assert out == "User works at Initech."
     call = p._client.messages.calls[0]
     assert call["model"] == "claude-sonnet-5"
-    assert "temperature" not in call and call["output_config"] == {"effort": "low"}
+    assert "extra_body" not in call and call["output_config"] == {"effort": "low"}
     assert "[1] I work at Initech." in call["messages"][0]["content"]
 
 
@@ -36,7 +36,7 @@ def test_judge_calls_use_haiku_at_temperature_zero():
     # An unparseable answer fails closed: treat the texts as different.
     assert p.claims_equal("a", "b") is False
     for call in p._client.messages.calls:
-        assert call["model"] == "claude-haiku-4-5" and call["temperature"] == 0
+        assert call["model"] == "claude-haiku-4-5" and call["extra_body"] == {"temperature": 0}
 
 
 def test_exclusions_are_added_to_prompt():
