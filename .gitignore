@@ -8,3 +8,4 @@ ui/node_modules/
 ui/.next/
 ui/next-env.d.ts
 dump.rdb
+ui/tsconfig.tsbuildinfo
