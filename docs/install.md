@@ -71,6 +71,6 @@ Not supported yet. ChatGPT connects only to MCP servers on a public HTTPS addres
 
 ## Settings
 
-| Variable | Default | Meaning |
+| Argument | Default | Meaning |
 |---|---|---|
-| `REDERIVE_DB` | `~/.rederive/memory.db` | Path of the SQLite memory file |
+| `--db PATH` | `~/.rederive/memory.db` | Path of the SQLite memory file. Add it after the script path in `args`. |
