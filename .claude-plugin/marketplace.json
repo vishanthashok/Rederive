@@ -1,0 +1,16 @@
+{
+  "name": "rederive",
+  "owner": {
+    "name": "Vishanth Ashok",
+    "url": "https://github.com/vishanthashok"
+  },
+  "description": "Rederive: long-term memory for Claude that you can correct, with lineage and rebuilds.",
+  "plugins": [
+    {
+      "name": "rederive",
+      "source": "./plugins/rederive",
+      "category": "productivity",
+      "tags": ["memory", "privacy"]
+    }
+  ]
+}

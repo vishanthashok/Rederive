@@ -6,6 +6,22 @@ It applies build-system and database ideas (lineage, incremental recompute, earl
 
 ![Graph view](docs/ui-1-graph.png)
 
+## Use it in Claude, Codex, and other chat apps
+
+`plugins/rederive/` is a plugin that puts Rederive in your chat app. It runs locally, needs only Python 3.9+, stores memory in one SQLite file, and needs no API key: the chat app's own model writes every summary and rebuild.
+
+```
+# Claude Code
+/plugin marketplace add vishanthashok/Redrive
+/plugin install rederive@rederive
+
+# Codex CLI
+codex plugin marketplace add vishanthashok/Redrive
+codex plugin add rederive@rederive
+```
+
+Cursor, VS Code, Gemini CLI, and Claude Desktop setup is in [docs/install.md](docs/install.md). The plugin's [README](plugins/rederive/README.md) covers the tools, what it stores, and its limits. Its tests run with `python -m pytest plugin_tests`.
+
 ## The demo
 
 The demo seeds one user with 40 support-chat messages and derives 49 records from them: topic summaries, beliefs, a profile, and procedures. One message is wrong. The agent stored "I work at Globex." from a transcript where the user was talking about a vendor.
@@ -120,6 +136,8 @@ Postgres is the source of truth for records, edges, and job state. Redis only or
 ## Repository
 
 ```
+plugins/rederive/     Claude and Codex plugin: stdlib MCP server, SQLite engine, memory skill
+plugin_tests/         plugin engine, MCP protocol, and server-parity tests
 sdk/rederive/        client.py (observe, derive, retract, correct, delete, read, lineage, diff)
                      recipes.py (recipe hashing, registry), exposure.py (@exposed decorator)
 server/app.py        FastAPI routes and the /events WebSocket
