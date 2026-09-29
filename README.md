@@ -131,7 +131,7 @@ server/cutoff.py     semantic early cutoff
 server/verify.py     deletion verifier
 server/fanin.py      bounded fan-in summary trees
 server/llm.py        FakeProvider and AnthropicProvider
-ui/                  Next.js, React Flow graph, word diff, exposure report, live events
+ui/                  Next.js + Tailwind/Radix, React Flow graph, word diff, exposure report, live events, ⌘K search
 scenarios/           wrong_employer, delete_phone, fanout_summary
 demo_agent/          40-message seed and the support agent
 eval/                run_scenarios.py, cutoff_pairs.jsonl (50 labeled pairs), tune_cutoff.py

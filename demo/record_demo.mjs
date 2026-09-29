@@ -150,7 +150,9 @@ async function main() {
   await sleep(6500);
   await caption(page, "Retract it.");
   await sleep(1500);
-  await click(page.getByRole("button", { name: "Retract" }));
+  await click(page.getByRole("button", { name: "Retract", exact: true }));
+  await sleep(1500);
+  await click(page.getByRole("alertdialog").getByRole("button", { name: "Retract" }));
 
   // 5. Watch the cascade, zoomed in on the records that went stale.
   await click(page.locator(".react-flow__controls-fitview"));
@@ -169,7 +171,7 @@ async function main() {
     if (!s.queued && !s.running) break;
     await sleep(500);
   }
-  await click(page.getByRole("button", { name: /Events/ }));
+  await click(page.getByRole("tab", { name: /Events/ }));
   await caption(page, `${s.done ?? 0} rebuilt with new content, ${s.cut_off ?? 0} cut off as equivalent, ` +
     `${s.skipped ?? 0} skipped with no model call.`);
   await sleep(9000);
@@ -184,7 +186,7 @@ async function main() {
   await sleep(8000);
 
   // 8. The exposure report.
-  await click(page.getByRole("button", { name: "Exposure" }));
+  await click(page.getByRole("tab", { name: "Exposure" }));
   await caption(page, "The exposure report lists past tool calls that read memory that is now invalid.");
   await sleep(6000);
   await highlight(page.locator(".call").first());
