@@ -136,8 +136,9 @@ class AnthropicProvider:
         }
         if model.startswith("claude-haiku"):
             # Haiku 4.5 accepts sampling params. Sonnet 5 rejects them, so it
-            # runs at low effort for stable, short outputs instead.
-            kwargs["temperature"] = 0
+            # runs at low effort for stable, short outputs instead. Newer SDKs
+            # dropped the temperature argument, so it goes in the raw body.
+            kwargs["extra_body"] = {"temperature": 0}
         else:
             kwargs["output_config"] = {"effort": "low"}
         return self._text(**kwargs)

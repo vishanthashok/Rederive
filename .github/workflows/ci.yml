@@ -32,6 +32,22 @@ jobs:
       - run: pip install -e ".[server,dev]"
       - run: python -m pytest -q
 
+  plugin:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: pip install pytest
+      # The plugin has no dependencies. Parity tests need the server package, which needs 3.11+.
+      - run: python -m pytest plugin_tests -q --ignore plugin_tests/test_parity.py
+      - if: matrix.python-version == '3.12'
+        run: pip install -e ".[server]" && python -m pytest plugin_tests/test_parity.py -q
+
   ui:
     runs-on: ubuntu-latest
     defaults:

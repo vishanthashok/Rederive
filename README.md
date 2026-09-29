@@ -6,6 +6,22 @@ It applies build-system and database ideas (lineage, incremental recompute, earl
 
 ![Graph view](docs/ui-1-graph.png)
 
+## Use it in Claude, Codex, and other chat apps
+
+`plugins/rederive/` is a plugin that puts Rederive in your chat app. It runs locally, needs only Python 3.9+, stores memory in one SQLite file, and needs no API key: the chat app's own model writes every summary and rebuild.
+
+```
+# Claude Code
+/plugin marketplace add vishanthashok/Rederive
+/plugin install rederive@rederive
+
+# Codex CLI
+codex plugin marketplace add vishanthashok/Rederive
+codex plugin add rederive@rederive
+```
+
+Cursor, VS Code, Gemini CLI, and Claude Desktop setup is in [docs/install.md](docs/install.md). The plugin's [README](plugins/rederive/README.md) covers the tools, what it stores, and its limits. Its tests run with `python -m pytest plugin_tests`.
+
 ## The demo
 
 The demo seeds one user with 40 support-chat messages and derives 49 records from them: topic summaries, beliefs, a profile, and procedures. One message is wrong. The agent stored "I work at Globex." from a transcript where the user was talking about a vendor.
@@ -35,7 +51,7 @@ exposure report (tool calls that read now-invalid versions):
 
 Of the 14 stale records, 7 were rebuilt with new content. 5 were rebuilt and judged equivalent, so they stopped the cascade (the role, manager, timezone, hours, and seats beliefs all come from the work summary but don't mention the employer). 2 never ran a recipe because every input was unchanged in content.
 
-Watch the 2-minute walkthrough: [docs/demo.webm](docs/demo.webm). It seeds the graph, shows the profile, runs a tool call, retracts the wrong message in the UI, follows the rebuild cascade, and ends on the diff and the exposure report.
+Watch the 2-minute walkthrough: [docs/demo.webm](docs/demo.webm). It runs on Claude (`REDERIVE_LLM=anthropic`), so every summary, belief, rebuild, and equivalence check in it is a real model call. It seeds the graph, shows the profile, runs a tool call, retracts the wrong message in the UI, follows the rebuild cascade, and ends on the diff and the exposure report. Model output varies between runs. The recorded run rebuilt 9 records, cut off 3, and skipped 2.
 
 | Profile diff | Exposure report |
 |---|---|
@@ -76,12 +92,13 @@ Recipes then run on `claude-sonnet-5` at low effort. Equivalence and paraphrase 
 ### Re-recording the video
 
 ```
+export REDERIVE_LLM=anthropic ANTHROPIC_API_KEY=...
 REDERIVE_REBUILD_DELAY=0.6 make worker   # one worker, slowed so each state shows on screen
 make server                              # and make ui, in other terminals
 make record                              # writes docs/demo.webm
 ```
 
-`REDERIVE_REBUILD_DELAY` makes a worker pause after it marks a record `rebuilding`. It defaults to 0 and exists only for demos. The script uses Playwright. Set `CHROMIUM_PATH` to use a specific browser binary.
+`REDERIVE_REBUILD_DELAY` makes a worker pause after it marks a record `rebuilding`. It defaults to 0 and exists only for demos. The script waits for the rebuild queue to drain before it shows the tally, so slower model calls do not cut the cascade short. Seeding takes about 80 seconds on Claude. The script uses Playwright. Set `CHROMIUM_PATH` to use a specific browser binary.
 
 ## Architecture
 
@@ -119,6 +136,8 @@ Postgres is the source of truth for records, edges, and job state. Redis only or
 ## Repository
 
 ```
+plugins/rederive/     Claude and Codex plugin: stdlib MCP server, SQLite engine, memory skill
+plugin_tests/         plugin engine, MCP protocol, and server-parity tests
 sdk/rederive/        client.py (observe, derive, retract, correct, delete, read, lineage, diff)
                      recipes.py (recipe hashing, registry), exposure.py (@exposed decorator)
 server/app.py        FastAPI routes and the /events WebSocket
