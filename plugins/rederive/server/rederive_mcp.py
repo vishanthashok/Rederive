@@ -3,19 +3,21 @@
 
 Speaks MCP (JSON-RPC 2.0, one message per line) with the Python standard
 library only. Memory is stored in a local SQLite file, by default
-~/.rederive/memory.db (override with REDERIVE_DB). The server makes no
+~/.rederive/memory.db (override with --db PATH). The server makes no
 network requests: the chat app's own model writes every summary and
 rebuild, and this server stores them and tracks what depends on what.
 
-Run: python3 rederive_mcp.py
+Run: python3 rederive_mcp.py [--db PATH]
 """
 
 from __future__ import annotations
 
+import argparse
 import json
 import os
 import sys
 import traceback
+from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -87,7 +89,10 @@ def main() -> None:
     # UTF-8 and bare newlines on every platform, Windows included.
     sys.stdin.reconfigure(encoding="utf-8")
     sys.stdout.reconfigure(encoding="utf-8", newline="\n")
-    path = default_path()
+    parser = argparse.ArgumentParser(description="Rederive MCP server (stdio)")
+    parser.add_argument("--db", help="SQLite memory file (default: ~/.rederive/memory.db)")
+    args = parser.parse_args()
+    path = Path(args.db).expanduser() if args.db else default_path()
     engine = Engine(Store(path))
     log(f"memory at {path}, project {engine.project}")
     server = Server(engine)

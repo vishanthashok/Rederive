@@ -1,7 +1,6 @@
 """Spawn the MCP server and talk to it over stdio, as a chat app would."""
 
 import json
-import os
 import subprocess
 import sys
 
@@ -9,11 +8,10 @@ from plugin_paths import SERVER_DIR
 
 
 def run(messages, tmp_path):
-    env = {**os.environ, "REDERIVE_DB": str(tmp_path / "memory.db")}
     proc = subprocess.run(
-        [sys.executable, str(SERVER_DIR / "rederive_mcp.py")],
+        [sys.executable, str(SERVER_DIR / "rederive_mcp.py"), "--db", str(tmp_path / "memory.db")],
         input="".join(json.dumps(m) + "\n" for m in messages),
-        capture_output=True, text=True, env=env, cwd=tmp_path, timeout=30,
+        capture_output=True, text=True, cwd=tmp_path, timeout=30,
     )
     assert proc.returncode == 0, proc.stderr
     return [json.loads(line) for line in proc.stdout.splitlines()]
@@ -75,7 +73,6 @@ def test_unknown_protocol_version_gets_latest(tmp_path):
 
 
 def test_bad_json_line(tmp_path):
-    env = {**os.environ, "REDERIVE_DB": str(tmp_path / "memory.db")}
-    proc = subprocess.run([sys.executable, str(SERVER_DIR / "rederive_mcp.py")], input="{not json\n",
-                          capture_output=True, text=True, env=env, timeout=30)
+    proc = subprocess.run([sys.executable, str(SERVER_DIR / "rederive_mcp.py"), "--db", str(tmp_path / "m.db")],
+                          input="{not json\n", capture_output=True, text=True, timeout=30)
     assert json.loads(proc.stdout)["error"]["code"] == -32700

@@ -10,7 +10,6 @@ transactions and fence tokens reject rebuilds that raced a newer change.
 from __future__ import annotations
 
 import json
-import os
 import sqlite3
 from contextlib import contextmanager
 from datetime import datetime, timezone
@@ -134,9 +133,6 @@ def now() -> str:
 
 
 def default_path() -> Path:
-    env = os.environ.get("REDERIVE_DB")
-    if env:
-        return Path(env).expanduser()
     return Path.home() / ".rederive" / "memory.db"
 
 

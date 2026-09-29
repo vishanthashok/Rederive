@@ -46,7 +46,7 @@ Python 3.9 or later, available as `python3`. macOS and most Linux systems alread
 ## What it runs, stores, and sends
 
 - **Runs**: one local program, `server/rederive_mcp.py`, which your chat app starts over standard input and output (MCP stdio). It stops when the app closes.
-- **Stores**: one SQLite file, `~/.rederive/memory.db` by default. Set the `REDERIVE_DB` environment variable to use another path. Memories are tagged with the project folder they were saved in and are only visible there, unless saved with global scope. Every app you connect shares the same file, so Claude Code and Codex see the same memory.
+- **Stores**: one SQLite file, `~/.rederive/memory.db` by default. To use another path, add `--db /your/path.db` to the server's arguments in your app's MCP config. Memories are tagged with the project folder they were saved in and are only visible there, unless saved with global scope. Every app you connect shares the same file, so Claude Code and Codex see the same memory.
 - **Sends**: nothing. The server makes no network requests and needs no API key. Your chat app's own model writes every summary and rebuild. Rederive stores the text, tracks what depends on what, orders the rebuilds, and decides when a cascade can stop.
 - **Deletes**: forgetting a memory replaces its text with `[deleted]` in the database. To keep future rebuilds from bringing it back, Rederive stores the forgotten text in a constraint table and checks new text against it. To erase everything, delete the database file.
 
