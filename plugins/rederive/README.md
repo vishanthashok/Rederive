@@ -50,6 +50,10 @@ Python 3.9 or later, available as `python3`. macOS and most Linux systems alread
 - **Sends**: nothing. The server makes no network requests and needs no API key. Your chat app's own model writes every summary and rebuild. Rederive stores the text, tracks what depends on what, orders the rebuilds, and decides when a cascade can stop.
 - **Deletes**: forgetting a memory replaces its text with `[deleted]` in the database. To keep future rebuilds from bringing it back, Rederive stores the forgotten text in a constraint table and checks new text against it. To erase everything, delete the database file.
 
+## Privacy
+
+Rederive stores memory only on your computer and sends nothing anywhere. See the [privacy policy](PRIVACY.md).
+
 ## Tools
 
 | Tool | What it does |
