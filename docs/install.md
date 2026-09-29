@@ -5,11 +5,11 @@ Rederive's plugin runs one local MCP server: `plugins/rederive/server/rederive_m
 ## Claude Code
 
 ```
-/plugin marketplace add vishanthashok/Redrive
+/plugin marketplace add vishanthashok/Rederive
 /plugin install rederive@rederive
 ```
 
-Or from a shell: `claude plugin marketplace add vishanthashok/Redrive` and `claude plugin install rederive@rederive`.
+Or from a shell: `claude plugin marketplace add vishanthashok/Rederive` and `claude plugin install rederive@rederive`.
 
 To try a local checkout without installing: `claude --plugin-dir ./plugins/rederive`.
 
@@ -24,15 +24,15 @@ Local MCP servers run in Claude Code and in Cowork sessions on your computer. cl
 As a plugin, which includes the skill:
 
 ```
-codex plugin marketplace add vishanthashok/Redrive
+codex plugin marketplace add vishanthashok/Rederive
 codex plugin add rederive@rederive
 ```
 
 Or as a plain MCP server:
 
 ```
-git clone https://github.com/vishanthashok/Redrive ~/Redrive
-codex mcp add rederive -- python3 ~/Redrive/plugins/rederive/server/rederive_mcp.py
+git clone https://github.com/vishanthashok/Rederive ~/Rederive
+codex mcp add rederive -- python3 ~/Rederive/plugins/rederive/server/rederive_mcp.py
 ```
 
 which writes this to `~/.codex/config.toml`:
@@ -40,7 +40,7 @@ which writes this to `~/.codex/config.toml`:
 ```toml
 [mcp_servers.rederive]
 command = "python3"
-args = ["/home/you/Redrive/plugins/rederive/server/rederive_mcp.py"]
+args = ["/home/you/Rederive/plugins/rederive/server/rederive_mcp.py"]
 ```
 
 ## Cursor, VS Code, Gemini CLI, Windsurf, and other MCP apps
@@ -52,7 +52,7 @@ Clone the repository, then add this server entry to the app's MCP config. Use th
   "mcpServers": {
     "rederive": {
       "command": "python3",
-      "args": ["/absolute/path/to/Redrive/plugins/rederive/server/rederive_mcp.py"]
+      "args": ["/absolute/path/to/Rederive/plugins/rederive/server/rederive_mcp.py"]
     }
   }
 }

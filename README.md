@@ -12,11 +12,11 @@ It applies build-system and database ideas (lineage, incremental recompute, earl
 
 ```
 # Claude Code
-/plugin marketplace add vishanthashok/Redrive
+/plugin marketplace add vishanthashok/Rederive
 /plugin install rederive@rederive
 
 # Codex CLI
-codex plugin marketplace add vishanthashok/Redrive
+codex plugin marketplace add vishanthashok/Rederive
 codex plugin add rederive@rederive
 ```
 

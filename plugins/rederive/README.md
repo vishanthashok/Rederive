@@ -24,7 +24,7 @@ Example:
 **Claude Code**
 
 ```
-/plugin marketplace add vishanthashok/Redrive
+/plugin marketplace add vishanthashok/Rederive
 /plugin install rederive@rederive
 ```
 
@@ -33,11 +33,11 @@ Example:
 **Codex CLI**
 
 ```
-codex plugin marketplace add vishanthashok/Redrive
+codex plugin marketplace add vishanthashok/Rederive
 codex plugin add rederive@rederive
 ```
 
-**Cursor, VS Code, Gemini CLI, and other MCP apps**: see [docs/install.md](https://github.com/vishanthashok/Redrive/blob/main/docs/install.md) in the repository.
+**Cursor, VS Code, Gemini CLI, and other MCP apps**: see [docs/install.md](https://github.com/vishanthashok/Rederive/blob/main/docs/install.md) in the repository.
 
 ## Requirements
 
@@ -78,4 +78,4 @@ After Claude rewrites a stale record, Rederive compares the old and new text cla
 
 ## Source and license
 
-Source: https://github.com/vishanthashok/Redrive. MIT license. The plugin is a local port of the Rederive server in the same repository, which adds Postgres, background workers, a graph UI, and optional Claude API calls for unattended rebuilds.
+Source: https://github.com/vishanthashok/Rederive. MIT license. The plugin is a local port of the Rederive server in the same repository, which adds Postgres, background workers, a graph UI, and optional Claude API calls for unattended rebuilds.

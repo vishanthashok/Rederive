@@ -7,8 +7,8 @@
     "name": "Vishanth Ashok",
     "url": "https://github.com/vishanthashok"
   },
-  "homepage": "https://github.com/vishanthashok/Redrive/tree/main/plugins/rederive",
-  "repository": "https://github.com/vishanthashok/Redrive",
+  "homepage": "https://github.com/vishanthashok/Rederive/tree/main/plugins/rederive",
+  "repository": "https://github.com/vishanthashok/Rederive",
   "license": "MIT",
   "keywords": ["memory", "long-term-memory", "lineage", "retraction", "privacy", "sqlite"]
 }
