@@ -51,7 +51,7 @@ exposure report (tool calls that read now-invalid versions):
 
 Of the 14 stale records, 7 were rebuilt with new content. 5 were rebuilt and judged equivalent, so they stopped the cascade (the role, manager, timezone, hours, and seats beliefs all come from the work summary but don't mention the employer). 2 never ran a recipe because every input was unchanged in content.
 
-Watch the 2-minute walkthrough: [docs/demo.webm](docs/demo.webm). It runs on Claude (`REDERIVE_LLM=anthropic`), so every summary, belief, rebuild, and equivalence check in it is a real model call. It seeds the graph, shows the profile, runs a tool call, retracts the wrong message in the UI, follows the rebuild cascade, and ends on the diff and the exposure report. Model output varies between runs. The recorded run rebuilt 9 records, cut off 3, and skipped 2.
+A 2-minute walkthrough video is not committed, to keep the repository small. Record it with `make record` (see [Re-recording the video](#re-recording-the-video)). It seeds the graph, shows the profile, runs a tool call, retracts the wrong message in the UI, follows the rebuild cascade, and ends on the diff and the exposure report.
 
 | Profile diff | Exposure report |
 |---|---|
